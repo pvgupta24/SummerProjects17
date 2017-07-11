@@ -12,7 +12,8 @@
 %% API
 -export([add/1, subtract/1, multiply/1, divide/1, greaterThanX/1,
   lessThanX/1, derive/2, integral/4, multiplyElements/2, filterGreaterThan/2,
-  maxElement/1, sumElements/1, closestZero/1, myfoldl/2, foldl/2, foldr/2]).
+  maxElement/1, sumElements/1, closestZero/1, myfoldl/2, foldl/2, foldr/2,
+  add/2, subtract/2, multiply/2, divide/2, greaterThanX/2, lessThanX/2]).
 
 %-----------------------------------------------------------------------------
 % Q1
@@ -21,37 +22,57 @@ add(X) ->
   fun(Y) -> X + Y
   end.
 
+%Returns X + Y using curried form of add.
+add(X, Y) ->
+  F = add(X),
+  F(Y).
+
 %Returns a function to subtract X from the parameter passed to the func i.e Y.
 subtract(X) ->
   fun(Y) -> Y - X
   end.
 
+%Returns X - Y using curried form of subtract.
+subtract(X, Y) -> (subtract(Y))(X).
+
 %Returns a function to multiply X with the parameter passed to the func i.e Y.
 multiply(X) ->
   fun(Y) -> X * Y
   end.
+%Returns X * Y using curried form of multiply.
+multiply(X, Y) -> (multiply(X))(Y).
+
 
 %Returns a function to divide the parameter passed to the func i.e Y with X.
 divide(X) ->
   fun(Y) -> Y / X
   end.
 
+%Returns X / Y using curried form of divide.
+divide(X, Y) -> (divide(Y))(X).
+
 %Returns a function which tells if the parameter passed to the func i.e Y is greater than X.
 greaterThanX(X) ->
   fun(Y) -> Y > X
   end.
+
+%Tells if X > Y using curried form of greaterThanX.
+greaterThanX(X, Y) -> (greaterThanX(X))(Y).
 
 %Returns a function which tells if the parameter passed to the func i.e Y is less than X.
 lessThanX(X) ->
   fun(Y) -> Y < X
   end.
 
+%Tells if X < Y using curried form of lessThanX.
+lessThanX(X, Y) -> (lessThanX(X))(Y).
+
 %--------------------------------------------------------------------------------------------
 
 % Returns the two elements of list whose sum is closest to zero.
 closestZero([H | T]) ->
   F = fun(X, [A, B]) ->
-    case (greaterThanX(abs((add(A))(B))))     (abs((add(A))(B))) of
+    case greaterThanX(abs(add(A,B)),abs(add(A,X))) of
       true -> [A, B];
       false -> [A, X]
     end end,
